@@ -39,13 +39,6 @@ You can edit the class by overriding methods, but be careful since these
 methods are interlinked like crazy, and you might break stuff while doing so.
 so beware when editing the class or overriding in your program.
 
-This project will be in Google Drive, and you can access it by the link below
-https://drive.google.com/drive/folders/1gGEzK_7GS14yYzb4RyD2qxjAN-8zTGOW?usp=sharing
-
-Just make sure to give credits, and you can do anything, but before changing
-the repo, just make sure to email me, so that I can review the code.
-my email-'viswas.anand@outlook.com'
-
 DOCUMENTATION:
 First, make sure you have setuptools upgraded (to check that, type the command- 
 "pip install --upgrade setuptools")
