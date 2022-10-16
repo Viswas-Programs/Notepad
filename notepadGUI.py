@@ -7,7 +7,7 @@ import platform
 import shelve
 import tkinter
 from tkinter import filedialog, messagebox, ttk, font, colorchooser
-import NotepadGUI.syntax_checker as syntax_checker
+import syntax_checker
 import typing
 import socket
 
