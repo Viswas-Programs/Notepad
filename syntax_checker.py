@@ -200,8 +200,7 @@ class SpellCheck(object):
         self.text = text
         self.root = root
         # file_dir = inspect.getfile(lambda: None).rstrip("syntax_checker.py")
-        with resources.files('NotepadGUI').joinpath(
-                "spellcheck.txt").open('r', encoding='utf-8') as reader:
+        with open("spellcheck.txt", 'r') as reader:
             self.spellcheck_list = reader.read().split("\n")
         self.root.bind("<Key>", self.SpellChecker)
 
@@ -231,8 +230,7 @@ class SpellCheck(object):
     def addToSpellCheck(self, text_to_add: str, event=None):
         """ adding words to spellcheck. """
         if text_to_add not in self.spellcheck_list:
-            with resources.files('NotepadGUI').joinpath(
-                    "spellcheck.txt").open('a', encoding='utf-8') as writer:
+            with open("spellcheck.txt", 'a') as writer:
                 writer.write("\n")
                 writer.write(text_to_add)
                 index = self.text.search(text_to_add, "insert", backwards=True,
