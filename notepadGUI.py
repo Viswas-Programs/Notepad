@@ -1,4 +1,4 @@
-""" notepad GUI v3"""
+""" notepad v3"""
 import ctypes as ct
 import datetime
 import inspect
