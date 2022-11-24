@@ -6,6 +6,8 @@ and official python tkinter documentation
 
 [PLEASE READ IT TILL THE END, FOR THE DOCUMENTATION!]
 
+UPDATE:- Because of the new updater only bundled with 3.3 and above, for users stuck in 3.2 or below, please download the files individually and replace them.
+
 this program mainly uses tkinter and it's modules, and no modules imported
 in this program require an external installation.
 inside the file, 'notepadGUI.py', you will find a class called 'NotepadRun',
