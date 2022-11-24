@@ -134,8 +134,9 @@ class NotepadRun(object):
         self.saveTo.configure(background=self.THEME_TYPING_WIDGETS_BG)
         self.text.configure(foreground=self.THEME_FOREGROUND, borderwidth=5)
         self.saveTo.configure(foreground=self.THEME_FOREGROUND, borderwidth=5)
-        self.UPDATER_FILE = requests.get("https://raw.githubusercontent.com/Viswas-Programs/Notepad/main/UPDATE.txt")
-        version, branch = str(self.UPDATER_FILE.content.decode).split("\n")
+        self.UPDATER_FILE = requests.get("https://raw.githubusercontent.com/Viswas-Programs/Notepad/main/VERSION.txt")
+        print(str(self.UPDATER_FILE.content.decode(encoding='utf-8')).split("\n"))
+        version, branch, a = str(self.UPDATER_FILE.content.decode(encoding='utf-8')).split("\n")
         if version > self.CURRENT_VERSION:
             messagebox.showinfo("Update available!", f"Version {version} of Notepad is available to download! kindly download this update.\n")
             self.update = tkinter.Label(self.root,
@@ -159,9 +160,9 @@ class NotepadRun(object):
     def showChangelogs(self):
         """ changelog """
         CHANGELOGS = tkinter.Toplevel()
-        CHANGELOG = str(requests.get("https://raw.githubusercontent.com/Viswas-Programs/main/CHANGELOGS.txt").content.decode)
+        CHANGELOG = str(requests.get("https://raw.githubusercontent.com/Viswas-Programs/Notepad/main/CHANGELOG.txt").content.decode)
 
-        showChangelog = tkinter.Label(CHANGELOG, background=self.THEME_WINDOW_BG, foreground=self.THEME_FOREGROUND, text=CHANGELOG)
+        showChangelog = tkinter.Label(CHANGELOGS, background=self.THEME_WINDOW_BG, foreground=self.THEME_FOREGROUND, text=CHANGELOG)
         showChangelog.grid(row=0, column=1)
         CHANGELOGS.mainloop()
 
@@ -183,9 +184,7 @@ class NotepadRun(object):
                 os.remove(source)
         # =====
         # My code again
-        self.update.destroy()
-        self.wannaUpdate.destroy()
-        updateZip = requests.get("https://github.com/Viswas-Programs/Notepad/update/updatedProgram.zip")
+        updateZip = requests.get("https://github.com/Viswas-Programs/Notepad/raw/update/updatedProgram.zip")
         ExtractFiles = zipfile.ZipFile(BytesIO(updateZip.content))
         ExtractFiles.extractall(os.getcwd())
 
