@@ -1,4 +1,5 @@
 """ notepad v3"""
+import shutil
 import ctypes as ct
 import datetime
 import inspect
@@ -7,9 +8,12 @@ import platform
 import shelve
 import tkinter
 from tkinter import filedialog, messagebox, ttk, font, colorchooser
-import NotepadGUI.syntax_checker as syntax_checker
+import syntax_checker
 import typing
 import socket
+import requests
+import zipfile
+from io import BytesIO
 
 if platform.system() == "Windows":
     initialPath = os.getenv("USERPROFILE")
@@ -23,6 +27,11 @@ with shelve.open(f"{initialPath}/Documents/update/updater") as updatePath:
     filePath = updatePath["filepath"]
     updatePath["fullpath"] = f"{updatePath['filepath']}/notepadGUI.py"
     fullpath = updatePath["fullpath"]
+def versionFind():
+    with open("VERSION.txt", "r") as version:
+        ver, branch = version.read().splitlines()
+    return ver, branch
+
 
 filetype = (
     ("Text documents (.txt)", "*.txt"),
@@ -35,6 +44,7 @@ class NotepadRun(object):
     def __init__(self, text_box: tkinter.Text, gui: tkinter.Tk, saveTo:
     tkinter.Text, file_to_open: str=None):
         print(f"Program started at {datetime.datetime.now()}")
+        self.CURRENT_VERSION, self.UPDATE_BRANCH = versionFind()
         self.fileopen = file_to_open
         self.PROGRAM_MODE_CONFIG = False
         self.font = "Arial Rounded MT Bold"
@@ -124,8 +134,10 @@ class NotepadRun(object):
         self.saveTo.configure(background=self.THEME_TYPING_WIDGETS_BG)
         self.text.configure(foreground=self.THEME_FOREGROUND, borderwidth=5)
         self.saveTo.configure(foreground=self.THEME_FOREGROUND, borderwidth=5)
-        print("Bound keyboard shortcuts")
-        if os.access(f"{initialPath}/Documents/updater.py", os.F_OK):
+        self.UPDATER_FILE = requests.get("https://raw.githubusercontent.com/Viswas-Programs/Notepad/main/UPDATE.txt")
+        version, branch = str(self.UPDATER_FILE.content.decode).split("\n")
+        if version > self.CURRENT_VERSION:
+            messagebox.showinfo("Update available!", f"Version {version} of Notepad is available to download! kindly download this update.\n")
             self.update = tkinter.Label(self.root,
                                         text="An update is available!",
                                         background=self.THEME_WINDOW_BG,
@@ -144,22 +156,45 @@ class NotepadRun(object):
             f"Exited the program at {datetime.datetime.now()}!\nadding an input"
             " so that from py console the console will show logs!")
         input()
+    def showChangelogs(self):
+        """ changelog """
+        CHANGELOGS = tkinter.Toplevel()
+        CHANGELOG = str(requests.get("https://raw.githubusercontent.com/Viswas-Programs/main/CHANGELOGS.txt").content.decode)
+
+        showChangelog = tkinter.Label(CHANGELOG, background=self.THEME_WINDOW_BG, foreground=self.THEME_FOREGROUND, text=CHANGELOG)
+        showChangelog.grid(row=0, column=1)
+        CHANGELOGS.mainloop()
+
 
     def updater(self, event=None):
         """ update program"""
+        self.showChangelogs()
+        SOURCE_FOLDER = inspect.getfile(lambda: None).removesuffix("notepadGUI.py")
+        DESTINATION_FOLDER = f"{self.CURRENT_VERSION}-{self.UPDATE_BRANCH}"
+        os.mkdir(DESTINATION_FOLDER)
+        # from this point, till '=====', it's code copied from pynative.com. so don't blame me for the code!
+        for file_name in os.listdir(SOURCE_FOLDER):
+            # construct full file path
+            source = SOURCE_FOLDER + file_name
+            destination = DESTINATION_FOLDER + file_name
+            # copy only files
+            if os.path.isfile(source):
+                shutil.copy(source, destination)
+                os.remove(source)
+        # =====
+        # My code again
         self.update.destroy()
         self.wannaUpdate.destroy()
-        with open(f'{initialPath}/Documents/updater.py', "r") as read_update:
-            with open(f'{initialPath}/Documents/notepadGUI.py', 'w') as wr_upd:
-                wr_upd.write(read_update.read())
-        os.remove(f'{initialPath}/Documents/updater.py')
+        updateZip = requests.get("https://github.com/Viswas-Programs/Notepad/update/updatedProgram.zip")
+        ExtractFiles = zipfile.ZipFile(BytesIO(updateZip.content))
+        ExtractFiles.extractall(os.getcwd())
 
         def restart():
             """ restart the program!"""
             os.system(str(fullpath))
+            exit()
 
-        check = messagebox.askyesno('Reboot required!', 'Do you want to restart'
-                                                        ' the program now, or '
+        check = messagebox.askyesno('Reboot required!', 'Do you want to restart the program now, or '
                                                         'later manually?')
         if check:
             restart()
@@ -191,7 +226,7 @@ class NotepadRun(object):
         self.FILE_EXIST = True
         self.saved = True
         try:
-            if "rickroll" in self.saveTo.get(1.0, tkinter.END).rstrip("\n"):
+            if "rrr" in self.saveTo.get(1.0, tkinter.END).rstrip("\n"):
                 self.text.delete(1.0, tkinter.END)
                 self.text.insert(1.0,
                                  """ We're no strangers to love
