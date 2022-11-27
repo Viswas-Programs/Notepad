@@ -15,6 +15,7 @@ import requests
 import zipfile
 from io import BytesIO
 
+MSG_SHOWN = False
 if platform.system() == "Windows":
     initialPath = os.getenv("USERPROFILE")
 else:
@@ -438,7 +439,7 @@ Never gonna run around and desert you""")
     def readFile(self, event=None, file=None):
         """ read files"""
         print("called readFile() function")
-        self.root.title("Notepad GUI v3.0")
+        self.root.title("Notepad GUI v3.3")
         self.saved = True
         if file is None:
             filePath = filedialog.askopenfilename(title="Open file to read",
@@ -550,7 +551,7 @@ Never gonna run around and desert you""")
             os.remove(self.saveTo.get(1.0, tkinter.END).rstrip("\n"))
             self.text.delete(1.0, tkinter.END)
             self.saveTo.delete(1.0, tkinter.END)
-            self.root.title("Notepad GUI v3.0")
+            self.root.title("Notepad GUI v3.3")
         else:
             messagebox.showerror("File doesn't exist",
                                  "The file you are trying "
@@ -922,6 +923,7 @@ Never gonna run around and desert you""")
         https://docs.microsoft.com/
         en-us/windows/win32/api/dwmapi/ne-dwmapi-dwmwindowattribute
         """
+        global MSG_SHOWN
         if platform.system() == "Windows":
             window.update()
             DWMWA_USE_IMMERSIVE_DARK_MODE = mode_val
@@ -934,11 +936,13 @@ Never gonna run around and desert you""")
             set_window_attribute(hwnd, rendering_policy, ct.byref(value),
                                  ct.sizeof(value))
         else:
-            messagebox.showerror(f"Function not supported for "
-                                 f"{platform.system()}!",
-                                 "The Title-Bar changer function is not "
-                                 f"supported for {platform.system()}, "
-                                 "the program will continue")
+            if not MSG_SHOWN:
+                messagebox.showerror(f"Function not supported for "
+                                     f"{platform.system()}!",
+                                     "The Title-Bar changer function is not "
+                                     f"supported for {platform.system()}, "
+                                     "the program will continue")
+                MSG_SHOWN = True
 
     def _sendFiles(self, sender_ip, port, file_path):
         """ send files over the same network
@@ -1015,7 +1019,7 @@ Never gonna run around and desert you""")
 def main():
     """ main """
     root = tkinter.Tk()
-    root.title("Notepad GUI v3.0 STABLE")
+    root.title("Notepad GUI v3.3 STABLE")
     text = tkinter.Text(root, height=20, width=100,
                         font=("Arial Rounded MT Bold",
                               18), )
