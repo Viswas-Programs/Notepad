@@ -14,6 +14,7 @@ import socket
 import requests
 import zipfile
 from io import BytesIO
+from cryptography.fernet import Fernet
 
 MSG_SHOWN = False
 if platform.system() == "Windows":
@@ -793,11 +794,15 @@ Never gonna run around and desert you""")
 
 
         def send_file():
+            nonlocal encryption
             """ send files GUI, if done neatly, will call the self._sendFiles()
             method"""
             def submit_form():
                 """ submits the form to self._sendFiles()"""
                 self._sendFiles(ip_address.get(), port.get(), fileSelect)
+            key = b'KEYKEYKEY123456123456'
+            messagebox.showinfo("Key", f"Key is {key}")
+            encryption = Fernet(key)
             send_file_gui = tkinter.Tk()
             send_file_gui.configure(background=self.THEME_WINDOW_BG,)
             send_file_gui.title("File transfer form")
@@ -945,6 +950,7 @@ Never gonna run around and desert you""")
                 MSG_SHOWN = True
 
     def _sendFiles(self, sender_ip, port, file_path):
+        nonlocal encryption
         """ send files over the same network
         thepythoncode.com's CODE"""
         #ALERT: thepythoncode.com's CODE! MAY CONTAIN FLAWS WITH MY CODE
@@ -961,20 +967,22 @@ Never gonna run around and desert you""")
         s.connect((host, port))
         print("[+] Connected.")
         s.send(f"{filename}{SEPARATOR}{filesize}".encode())
-        messagebox.showinfo("Success", f"Connected to {sender_ip} and now "
-                                       f"trying to send the file")
         with open(filename, "rb+") as f:
             while True:
                 # read the bytes from the file
-                bytes_read = f.read(BUFFER_SIZE)
+                bytes_read =  f.read(BUFFER_SIZE)
                 if not bytes_read:
                     # file transmitting is done
                     break
                 # we use sendall to assure transimission in busy networks
-                s.sendall(bytes_read)
+                file_to_send = encryption.encrypt(bytes_read)
+                s.sendall(file_to_send)
+        messagebox.showinfo("Success", f"Connected and sent to {sender_ip}")
+
+        # close the socket
         s.close()
 
-    def _receiveFiles(self, receiver_ip, port=5001):
+    def _receiveFiles(self, key, receiver_ip, port=5001):
         """ receive files in the same network (thepythoncode.com's code)"""
         SERVER_HOST = receiver_ip
         SERVER_PORT = port
@@ -1006,7 +1014,9 @@ Never gonna run around and desert you""")
                     # file transmitting is done
                     break
                 # write to the file the bytes we just received
-                f.write(bytes_read)
+                decryptor = Fernet(key=key)
+                file_to_receive = decryptor.decrypt(bytes_read).decode(encoding='utf-8')
+                f.write(file_to_receive)
         # close the client socket
         client_socket.close()
         # close the server socket
