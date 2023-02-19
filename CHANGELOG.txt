@@ -20,3 +20,4 @@ v3.4 ->
 -Added PDF Support (Using FPDF Module)
 -Used a robust reboot method in Updating the program using subprocess module.
 -PDF: It has the same viewing mode, and also, you can use VIEW MODE, PROTECTED MODE to protect
+--Now, added encryption to protected mode files, to access this new encryption, as usual, use the code at the start of the file, but additionally, in the file name, include the word "PROTECTED" without the quotes, (Example: BoiBoiPROTECTED.txt)
