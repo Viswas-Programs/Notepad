@@ -9,7 +9,7 @@ import shelve
 import tkinter
 from tkinter import filedialog, ttk, font, colorchooser
 from tkinter import messagebox
-import Notepad.syntax_checker as syntax_checker
+import syntax_checker
 import typing
 import socket
 from Cryptodome.Cipher import AES
