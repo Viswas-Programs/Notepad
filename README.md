@@ -4,7 +4,7 @@ This is a notepad project created with code from
 * [StackOverflow](https://www.stackoverflow.com)
 * [The python codes](thepythoncodes.com)
 * [Geeks for geeks](geeksforgeeks.org)
-and [Python Tkinter Document]https://docs.python.org/3/library/tkinter.html).
+and [Python Tkinter Document](https://docs.python.org/3/library/tkinter.html).
 
 this program mainly uses tkinter and it's modules, and no modules imported
 in this program require an external installation.
